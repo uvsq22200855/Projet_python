@@ -1,10 +1,13 @@
 # Projet_python
 Lien github du Projet: https://github.com/uvsq22200855/Projet_python
 
-L1 MIASHS TD01 de Lichah,Lawson,Hnaoui et Sweth
+L1 MIASHS TD01 de Lichah,Lawson,Hnaoui et Saravanan
 
 
 https://docs.python.org/fr/3/library/functions.html
+Pour le messagebox.showerror: https://docs.python.org/3/library/tkinter.messagebox.html
+Pour le  set(): https://www.geeksforgeeks.org/python-set-method/
+
 
 import tkinter as tk:
 bibliothèque d'interface graphique [des fenêtres, des widgets (boutons, zones de texte, cases à cocher, …), des évènements (clavier, souris, …) ]
