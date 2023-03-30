@@ -5,8 +5,18 @@ L1 MIASHS TD01 de Lichah,Lawson,Hnaoui et Saravanan
 
 
 https://docs.python.org/fr/3/library/functions.html
+
 Pour le messagebox.showerror: https://docs.python.org/3/library/tkinter.messagebox.html
+
 Pour le  set(): https://www.geeksforgeeks.org/python-set-method/
+
+Pour le .after: https://www.geeksforgeeks.org/python-after-method-in-tkinter/
+
+Pour le .config: https://coderslegacy.com/python/tkinter-config/
+
+Pour le .label: https://www.tresfacile.net/le-widget-label-tkinter/
+
+Pour le .format: le temps écoulé en minutes et en secondes à l'aide de la méthode format(). Le {:02d} est un spécificateur de format qui garantit que le nombre affiché comporte au moins deux chiffres et que des zéros sont ajoutés si nécessaire.
 
 
 import tkinter as tk:
@@ -38,6 +48,6 @@ tk.entry une méthode qui permet la saisie dans la fenêtre principale
 
 #la grille est renvoyée en tant que liste de listes de widgets Entry.
 
-#https://waytolearnx.com/2020/07/la-methode-grid-tkinter-python-3.html pour grid()
+#https://waytolearnx.com/2020/07/la-methode-grid-tkinter-python-3.html pour grid() plein d'autre information
 
 #https://www.tutorialspoint.com/python/tk_entry.htm pour tk.Entry
