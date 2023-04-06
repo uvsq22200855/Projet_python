@@ -2,10 +2,26 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
-
 # Création de la fenêtre principale
 fenetre = tk.Tk()
 fenetre.title("Sudoku1Shot")
+
+# Ajout d'un label pour afficher le temps
+temps_label = tk.Label(fenetre, text="Temps: 00:00")
+temps_label.grid(row=9, column=8)
+
+
+# Fonction pour mettre à jour le temps toutes les secondes
+temps=0 # Ajout de la variable temps à zéro
+def timer_maj():
+    global temps
+    temps += 1
+    temps_label.config(text="Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
+    fenetre.after(1000, timer_maj)
+
+# Lancer la fonction pour mettre à jour le temps toutes les secondes
+fenetre.after(1000, timer_maj)
+
 
 def creation_grille_complete():
     base  = 3
@@ -74,16 +90,24 @@ grille_principale = cree_grille()
 
  
 # Fonction pour vérifier la grille de sudoku
-
 def verifie_grille():
+    global nb_erreurs
+    nb_erreurs = 0 # Ajout de la variable nb_erreurs à zéro
+
     for l in range(9):
         for c in range(9):
 
-            valeur = grille_principale[l][c].get()
-            if valeur == "" or not valeur.isdigit() or int(valeur) < 1 or int(valeur) > 9:
-
+            value = grille_principale[l][c].get()
+            if value == "" or not value.isdigit() or int(value) < 1 or int(value) > 9:
                 messagebox.showerror("Erreur", "Il y a une erreur dans la case ({}, {}).".format(l+1, c+1))   #vide ou valeur invalide
+
+                nb_erreurs += 1 # Ajouter une erreur
                 return
+            
+    if nb_erreurs == 0:
+        # arrete le timer
+        # montre le temps total pour avoir résolu le sudoku
+        messagebox.showinfo("Sudoku terminé", "Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
 
     for l in range(9):
 
