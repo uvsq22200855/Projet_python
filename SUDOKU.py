@@ -8,7 +8,13 @@ fenetre.title("Sudoku1Shot")
 
 # Ajout d'un label pour afficher le temps
 temps_label = tk.Label(fenetre, text="Temps: 00:00")
-temps_label.grid(row=9, column=8)
+temps_label.grid(row=10, column=0)
+
+# Ajout d'un label pour afficher le nombre d'erreurs
+nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
+nb_erreurs_label.grid(row=10, column=8)
+
+nb_erreurs=0
 
 
 # Fonction pour mettre à jour le temps toutes les secondes
@@ -23,7 +29,7 @@ def timer_maj():
 fenetre.after(1000, timer_maj)
 
 
-def creation_grille_complete():
+def creation_grille_aleatoire():
     base  = 3
     cote  = base*base
 
@@ -48,11 +54,11 @@ def creation_grille_complete():
 # Fonction pour créer la grille de sudoku
 def cree_grille():
     # Création d'une grille de 9x9 cases (celle de base dans le jeu sudoku)
-    grid = []
+    grille_cree = []
 
     for ligne in range(9):
         # Créer une nouvelle ligne pour la grille
-        row = []
+        ligne_cree = []
 
         for colonne in range(9):
             # Créer un nouveau compartiment pour la grille
@@ -62,52 +68,52 @@ def cree_grille():
             compartiment.grid(row=ligne, column=colonne)
 
             # Ajouter la case à la ligne
-            row.append(compartiment)
+            ligne_cree.append(compartiment)
 
         # Ajouter la ligne à la grille
-        grid.append(row)
+        grille_cree.append(ligne_cree)
 
     # Création de la grille de sudoku en ajoutant grille_principale a la fonction 
-    grille_defini = creation_grille_complete()
+    grille_defini = creation_grille_aleatoire()
 
     # retirer aléatoirement des chiffres de la grille complétée pour créer une grille de Sudoku résoluble
     for i in range(81):
-        row = i // 9
+        ligne = i // 9
         colonne = i % 9
-        cellule = grid[row][colonne]
+        cellule = grille_cree[ligne][colonne]
         
         if random.random() < 0.5:
-            cellule.delete(0, tk.END)
-        else:
-            cellule.insert(0, str(grille_defini[row][colonne]))
+            # supprimer des nombres sélectionnés au hasard dans une grille de Sudoku complétée afin de créer une grille résoluble.
+            cellule.delete(0, tk.END) # supprimer le contenu de la cellule, en commençant par l'index 0 jusqu'à tk.END
+        else:  
+            #utilisée pour insérer une valeur dans un widget Tkinter, utilisée pour insérer un nombre dans la cellule, à partir de l'index 0.                       
+            cellule.insert(0, str(grille_defini[ligne][colonne])) 
+            #définir l'option state du widget cellule sur "disabled", ce qui empêche l'utilisateur de modifier la valeur de la cellule.
             cellule.config(state="disabled")
 
     # retourné la grille 
-    return grid
+    return grille_cree
 
 # Création de la grille de sudoku en ajoutant grille_principale a la fonction
 grille_principale = cree_grille()
 
- 
+
 # Fonction pour vérifier la grille de sudoku
 def verifie_grille():
     global nb_erreurs
-    nb_erreurs = 0 # Ajout de la variable nb_erreurs à zéro
-
+    
     for l in range(9):
         for c in range(9):
-
-            value = grille_principale[l][c].get()
-            if value == "" or not value.isdigit() or int(value) < 1 or int(value) > 9:
-                messagebox.showerror("Erreur", "Il y a une erreur dans la case ({}, {}).".format(l+1, c+1))   #vide ou valeur invalide
-
-                nb_erreurs += 1 # Ajouter une erreur
-                return
             
-    if nb_erreurs == 0:
-        # arrete le timer
-        # montre le temps total pour avoir résolu le sudoku
-        messagebox.showinfo("Sudoku terminé", "Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
+            valeur = grille_principale[l][c].get()
+            if valeur == "" or not valeur.isdigit() or int(valeur) < 1 or int(valeur) > 9:
+                messagebox.showerror("Erreur", "Il manque une valeur dans la case ou elle ne respecte pas les contrainte du jeu ({}, {}).".format(l+1, c+1))   #vide ou valeur invalide
+                nb_erreurs += 1
+                
+                # Mise à jour du nombre d'erreurs
+                nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
+                
+                return
 
     for l in range(9):
 
@@ -120,6 +126,11 @@ def verifie_grille():
 
             if grille_principale[l][c].get() in nombre_ligne:
                 messagebox.showerror("Erreur", "Il y a une erreur dans la ligne {}.".format(l+1))
+                nb_erreurs += 1
+                
+                # Mise à jour du nombre d'erreurs
+                nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
+                
                 return
             nombre_ligne.add(grille_principale[l][c].get())
 
@@ -127,6 +138,11 @@ def verifie_grille():
 
             if grille_principale[c][l].get() in nombre_colone:
                 messagebox.showerror("Erreur", "Il y a une erreur dans la colonne {}.".format(l+1))
+                nb_erreurs += 1
+                
+                # Mise à jour du nombre d'erreurs
+                nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
+                
                 return
             nombre_colone.add(grille_principale[c][l].get())
 
@@ -136,11 +152,19 @@ def verifie_grille():
             carre_colone = (l % 3) * 3 + c % 3
 
             if grille_principale[carre_ligne][carre_colone].get() in nombre_carre:
-                messagebox.showerror("Erreur", "Il y a une erreur dans le carré({}, {}).".format(carre_ligne+1, carre_colone+1))
+                messagebox.showerror("Erreur", "Il y a une erreur dans le carre ({}, {}).".format(l // 3 + 1, l % 3 + 1))
+                nb_erreurs += 1
+                
+                # Mise à jour du nombre d'erreurs
+                nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
+                
                 return
             nombre_carre.add(grille_principale[carre_ligne][carre_colone].get())
-
-    messagebox.showinfo("Juste", "La grille de Sudoku est correcte !")
+            
+ 
+    messagebox.showinfo("Erreurs", "Tu as fait {} erreur(s) durant cette parti.".format(nb_erreurs))
+    messagebox.showinfo("Tu as terminé en seulement", "Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
+    messagebox.showinfo("Bien joué", "La grille de Sudoku est correcte !")
 
 
 # Création du bouton de vérification
@@ -180,11 +204,11 @@ def aide_chiffre(chiffre):
 
  
 # Création du bouton d'aide
-
 aide_bouton = tk.Button(fenetre, text="Aide", command=lambda: aide_chiffre(bouton_aide.get()))
 aide_bouton.grid(row=9, column=1)
+
 #Le lambda est utilisé pour créer une fonction anonyme 
 #qui prendra en paramètre la valeur entrée dans aide_entry.get et la passera à la fonction aide_chiffre lorsque le bouton est cliqué.
- 
+
 # Affichage de la fenêtre
 fenetre.mainloop()
