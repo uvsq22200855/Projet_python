@@ -14,8 +14,29 @@ temps_label.grid(row=10, column=0)
 nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
 nb_erreurs_label.grid(row=10, column=8)
 
-nb_erreurs=0
 
+grille_principale = []
+nb_erreurs=0
+def recommencer_parti():
+    global grille_principale #signifie que toute modification apportée à cette variable à l'intérieur de la fonction
+    global nb_erreurs           #affectera la variable globale du même nom à l'extérieur de la fonction.
+    global temps
+    temps = 0
+    nb_erreurs=0
+    temps_label.config(text="Temps: 00:00")     # mettre à jour le label pour afficher le temps à 0
+    nb_erreurs_label.config(text="Erreurs: 0")  # mettre à jour le label pour afficher le nombre d'erreurs à 0
+
+    for ligne in grille_principale:    #itère sur chaque ligne de la grille du puzzle.
+        for cellule in ligne:          #itère sur chaque cellule de la ligne courante.
+            #efface le contenu de la cellule courante.         
+            cellule.delete(0, tk.END)
+            #définit l'état de la cellule courante à "normal", ce qui signifie que le joueur peut y entrer une valeur
+            cellule.config(state="normal") 
+    grille_principale = cree_grille()  #génère une nouvelle grille de puzzle et l'assigne à "grille_principale".
+
+# Ajout d'un bouton pour redémarrer le jeu
+restart_bouton = tk.Button(fenetre, text="Redémarrer", command=recommencer_parti)
+restart_bouton.grid(row=9, column=8)
 
 # Fonction pour mettre à jour le temps toutes les secondes
 temps=0 # Ajout de la variable temps à zéro
