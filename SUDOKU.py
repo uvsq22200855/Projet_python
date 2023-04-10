@@ -8,11 +8,11 @@ fenetre.title("Sudoku1Shot")
 
 # Ajout d'un label pour afficher le temps
 temps_label = tk.Label(fenetre, text="Temps: 00:00")
-temps_label.grid(row=10, column=0)
+temps_label.grid(row=3, column=10)
 
 # Ajout d'un label pour afficher le nombre d'erreurs
 nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
-nb_erreurs_label.grid(row=10, column=8)
+nb_erreurs_label.grid(row=9, column=8)
 
 
 grille_principale = []
@@ -21,6 +21,7 @@ def recommencer_parti():
     global grille_principale #signifie que toute modification apportée à cette variable à l'intérieur de la fonction
     global nb_erreurs           #affectera la variable globale du même nom à l'extérieur de la fonction.
     global temps
+
     temps = 0
     nb_erreurs=0
     temps_label.config(text="Temps: 00:00")     # mettre à jour le label pour afficher le temps à 0
@@ -36,7 +37,71 @@ def recommencer_parti():
 
 # Ajout d'un bouton pour redémarrer le jeu
 restart_bouton = tk.Button(fenetre, text="Redémarrer", command=recommencer_parti)
-restart_bouton.grid(row=9, column=8)
+restart_bouton.grid(row=2, column=10)
+
+
+def afficher_contraintes():
+    global grille_principale
+    
+    # Vérification des contraintes dans chaque ligne
+    for l in range(9):
+        ligne = []
+
+        for c in range(9):
+            valeur = grille_principale[l][c].get()
+            if valeur == "" or not valeur.isdigit() or int(valeur) < 1 or int(valeur) > 9:  # vérifie si l'utilisateur a saisie une valeur
+                grille_principale[l][c].config(bg="red")
+            else:
+                grille_principale[l][c].config(bg="white") #la couleur de fond de la cellule est fixée au blanc pour indiquer qu'elle respecte les contraintes.
+
+            if valeur != "":
+                # La valeur existe déjà dans cette ligne
+                if valeur in ligne:
+
+                    for i in range(9):
+                        if grille_principale[l][i].get() == valeur:
+                            grille_principale[l][i].config(bg="red")
+                else:
+                    # Si la valeur ne figure pas dans la liste de lignes, elle l'ajoute à la liste pour vérification ultérieure.
+                    ligne.append(valeur) # permet de vérifier si une valeur apparaît déjà dans la ligne et dc pas de doublons.
+                                         
+        # Vérification des contraintes dans chaque colonne
+        colonne = []
+
+        for c in range(9):
+            valeur = grille_principale[c][l].get()
+            if valeur != "":
+                # La valeur existe déjà dans cette colonne
+                if valeur in colonne:
+
+                    for i in range(9):
+                        if grille_principale[i][l].get() == valeur:
+                            grille_principale[i][l].config(bg="red")
+                else:
+                    colonne.append(valeur)
+                    
+        # Vérification des contraintes dans chaque carré
+        carre = []
+        ligne = (l // 3) * 3
+        colonne = (l % 3) * 3
+
+        for r in range(ligne, ligne + 3):
+            for c in range(colonne, colonne + 3):
+                valeur = grille_principale[r][c].get()
+                if valeur != "":
+                    # La valeur existe déjà dans ce carré
+                    if valeur in carre:
+                        
+                        for i in range(ligne, ligne + 3):
+                            for j in range(colonne, colonne + 3):
+                                if grille_principale[i][j].get() == valeur:
+                                    grille_principale[i][j].config(bg="red")
+                    else:
+                        carre.append(valeur)
+
+# Création d'un bouton pour afficher les contraintes
+contraintes_bouton = tk.Button(fenetre, text="Afficher les erreurs", command=afficher_contraintes)
+contraintes_bouton.grid(row=5, column=10)
 
 # Fonction pour mettre à jour le temps toutes les secondes
 temps=0 # Ajout de la variable temps à zéro
@@ -133,7 +198,6 @@ def verifie_grille():
                 
                 # Mise à jour du nombre d'erreurs
                 nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
-                
                 return
 
     for l in range(9):
@@ -151,7 +215,6 @@ def verifie_grille():
                 
                 # Mise à jour du nombre d'erreurs
                 nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
-                
                 return
             nombre_ligne.add(grille_principale[l][c].get())
 
@@ -163,12 +226,10 @@ def verifie_grille():
                 
                 # Mise à jour du nombre d'erreurs
                 nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
-                
                 return
             nombre_colone.add(grille_principale[c][l].get())
 
             # Vérifier le carre 3x3 (l // 3, l % 3)
-
             carre_ligne = (l // 3) * 3 + c // 3
             carre_colone = (l % 3) * 3 + c % 3
 
@@ -178,7 +239,6 @@ def verifie_grille():
                 
                 # Mise à jour du nombre d'erreurs
                 nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
-                
                 return
             nombre_carre.add(grille_principale[carre_ligne][carre_colone].get())
             
@@ -187,16 +247,15 @@ def verifie_grille():
     messagebox.showinfo("Tu as terminé en seulement", "Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
     messagebox.showinfo("Bien joué", "La grille de Sudoku est correcte !")
 
-
 # Création du bouton de vérification
-bouton_verif = tk.Button(fenetre, text="Go", command=verifie_grille)
-bouton_verif.grid(row=9, column=4)
+bouton_verif = tk.Button(fenetre, text="Vérification", command=verifie_grille)
+bouton_verif.grid(row=9, column=3)
+
 
 # Création de la zone de texte pour entrer le chiffre
 bouton_aide = tk.Entry(fenetre, width=4)
 bouton_aide.grid(row=9, column=0)
 
- 
 # Fonction pour afficher les cases contenant un chiffre donné
 def aide_chiffre(chiffre):
 
@@ -220,14 +279,11 @@ def aide_chiffre(chiffre):
 
     # Si aucune case ne contient le chiffre entré mettre un message d'erreur
     if all(cell["bg"] != "turquoise" for row in grille_principale for cell in row):
-
         messagebox.showerror("Erreur", "Aucune case ne contient ce chiffre.")
-
  
 # Création du bouton d'aide
 aide_bouton = tk.Button(fenetre, text="Aide", command=lambda: aide_chiffre(bouton_aide.get()))
 aide_bouton.grid(row=9, column=1)
-
 #Le lambda est utilisé pour créer une fonction anonyme 
 #qui prendra en paramètre la valeur entrée dans aide_entry.get et la passera à la fonction aide_chiffre lorsque le bouton est cliqué.
 
