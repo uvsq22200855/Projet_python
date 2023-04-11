@@ -14,6 +14,10 @@ temps_label.grid(row=3, column=10)
 nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
 nb_erreurs_label.grid(row=9, column=8)
 
+# Ajout d'un label pour afficher le nombre de contraintes
+nb_contraintes_label = tk.Label(fenetre, text="Contraintes: 0")
+nb_contraintes_label.grid(row=10, column=10)
+
 
 grille_principale = []
 nb_erreurs=0
@@ -39,9 +43,16 @@ def recommencer_parti():
 restart_bouton = tk.Button(fenetre, text="Redémarrer", command=recommencer_parti)
 restart_bouton.grid(row=2, column=10)
 
-
+nb_contraintes=0
+nombre_cliques = 0
 def afficher_contraintes():
     global grille_principale
+    global nb_contraintes
+    global nombre_cliques
+    nb_contraintes = 0
+    nombre_cliques += 1
+    if nombre_cliques == 5:
+        afficher_erreurs_bouton.config(state=tk.DISABLED) #Désactiver le bouton lorsque on appuis 5 fois dessus.
     
     # Vérification des contraintes dans chaque ligne
     for l in range(9):
@@ -51,16 +62,18 @@ def afficher_contraintes():
             valeur = grille_principale[l][c].get()
             if valeur == "" or not valeur.isdigit() or int(valeur) < 1 or int(valeur) > 9:  # vérifie si l'utilisateur a saisie une valeur
                 grille_principale[l][c].config(bg="red")
+                nb_contraintes+=1
             else:
                 grille_principale[l][c].config(bg="white") #la couleur de fond de la cellule est fixée au blanc pour indiquer qu'elle respecte les contraintes.
 
             if valeur != "":
-                # La valeur existe déjà dans cette ligne
+                # La valeur existe déjà dans cette colonne
                 if valeur in ligne:
 
                     for i in range(9):
                         if grille_principale[l][i].get() == valeur:
                             grille_principale[l][i].config(bg="red")
+                            nb_contraintes+=1
                 else:
                     # Si la valeur ne figure pas dans la liste de lignes, elle l'ajoute à la liste pour vérification ultérieure.
                     ligne.append(valeur) # permet de vérifier si une valeur apparaît déjà dans la ligne et dc pas de doublons.
@@ -77,6 +90,7 @@ def afficher_contraintes():
                     for i in range(9):
                         if grille_principale[i][l].get() == valeur:
                             grille_principale[i][l].config(bg="red")
+                            nb_contraintes+=1
                 else:
                     colonne.append(valeur)
                     
@@ -89,19 +103,22 @@ def afficher_contraintes():
             for c in range(colonne, colonne + 3):
                 valeur = grille_principale[r][c].get()
                 if valeur != "":
-                    # La valeur existe déjà dans ce carré
+                    # La valeur existe déjà dans cette colonne
                     if valeur in carre:
                         
                         for i in range(ligne, ligne + 3):
                             for j in range(colonne, colonne + 3):
                                 if grille_principale[i][j].get() == valeur:
                                     grille_principale[i][j].config(bg="red")
+                                    nb_contraintes+=1
                     else:
                         carre.append(valeur)
 
+    nb_contraintes_label.config(text=f"Contraintes: {nb_contraintes}") # mettre à jour le label pour afficher le nombre de containtes à chaque appel de la fonction.
+
 # Création d'un bouton pour afficher les contraintes
-contraintes_bouton = tk.Button(fenetre, text="Afficher les erreurs", command=afficher_contraintes)
-contraintes_bouton.grid(row=5, column=10)
+afficher_erreurs_bouton = tk.Button(fenetre, text="Afficher les erreurs", command=afficher_contraintes)
+afficher_erreurs_bouton.grid(row=5, column=10)
 
 # Fonction pour mettre à jour le temps toutes les secondes
 temps=0 # Ajout de la variable temps à zéro
@@ -286,6 +303,15 @@ aide_bouton = tk.Button(fenetre, text="Aide", command=lambda: aide_chiffre(bouto
 aide_bouton.grid(row=9, column=1)
 #Le lambda est utilisé pour créer une fonction anonyme 
 #qui prendra en paramètre la valeur entrée dans aide_entry.get et la passera à la fonction aide_chiffre lorsque le bouton est cliqué.
+
+
+def quitter_partie():
+    if messagebox.askyesno("J'en ai marre", "Tu es un looser ouuuuu ?"):      #Demander une question
+        fenetre.destroy() # détruit la fenêtre principale de l'application et quitte le programme.
+
+quitter_bouton = tk.Button(fenetre, text="J'en ai marre", command=quitter_partie)
+quitter_bouton.grid(row=9, column=5)
+
 
 # Affichage de la fenêtre
 fenetre.mainloop()
