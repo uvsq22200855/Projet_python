@@ -16,7 +16,10 @@ nb_erreurs_label.grid(row=9, column=8)
 
 # Ajout d'un label pour afficher le nombre de contraintes
 nb_contraintes_label = tk.Label(fenetre, text="Contraintes: 0")
-nb_contraintes_label.grid(row=10, column=10)
+nb_contraintes_label.grid(row=7, column=10)
+
+essais_restants_label = tk.Label(fenetre, text="Essais restants: 5")
+essais_restants_label.grid(row=6, column=10)
 
 
 grille_principale = []
@@ -25,11 +28,20 @@ def recommencer_parti():
     global grille_principale #signifie que toute modification apportée à cette variable à l'intérieur de la fonction
     global nb_erreurs           #affectera la variable globale du même nom à l'extérieur de la fonction.
     global temps
+    global nb_contraintes
+    global essais_user
+    global nb_cliques
 
+    essais_user=0
     temps = 0
     nb_erreurs=0
+    nb_contraintes = 0
+    nb_cliques=0
     temps_label.config(text="Temps: 00:00")     # mettre à jour le label pour afficher le temps à 0
     nb_erreurs_label.config(text="Erreurs: 0")  # mettre à jour le label pour afficher le nombre d'erreurs à 0
+    nb_contraintes_label.config(text="Contraintes: 0")
+    essais_restants_label.config(text="Essais restants: 5")
+    afficher_erreurs_bouton.config(state='normal')
 
     for ligne in grille_principale:    #itère sur chaque ligne de la grille du puzzle.
         for cellule in ligne:          #itère sur chaque cellule de la ligne courante.
@@ -43,15 +55,19 @@ def recommencer_parti():
 restart_bouton = tk.Button(fenetre, text="Redémarrer", command=recommencer_parti)
 restart_bouton.grid(row=2, column=10)
 
-nb_contraintes=0
-nombre_cliques = 0
+
+nb_cliques = 0
+essais_user=0
 def afficher_contraintes():
     global grille_principale
     global nb_contraintes
-    global nombre_cliques
+    global nb_cliques
+    global essais_user
     nb_contraintes = 0
-    nombre_cliques += 1
-    if nombre_cliques == 5:
+    nb_cliques += 1
+    essais_user += 1
+
+    if nb_cliques == 5:
         afficher_erreurs_bouton.config(state=tk.DISABLED) #Désactiver le bouton lorsque on appuis 5 fois dessus.
     
     # Vérification des contraintes dans chaque ligne
@@ -115,6 +131,9 @@ def afficher_contraintes():
                         carre.append(valeur)
 
     nb_contraintes_label.config(text=f"Contraintes: {nb_contraintes}") # mettre à jour le label pour afficher le nombre de containtes à chaque appel de la fonction.
+    essais_restants = 5 - essais_user
+    essais_restants_label.config(text="Essais restants: {}".format(essais_restants))
+
 
 # Création d'un bouton pour afficher les contraintes
 afficher_erreurs_bouton = tk.Button(fenetre, text="Afficher les erreurs", command=afficher_contraintes)
@@ -260,8 +279,8 @@ def verifie_grille():
             nombre_carre.add(grille_principale[carre_ligne][carre_colone].get())
             
  
-    messagebox.showinfo("Erreurs", "Tu as fait {} erreur(s) durant cette parti.".format(nb_erreurs))
     messagebox.showinfo("Tu as terminé en seulement", "Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
+    messagebox.showinfo("Erreurs", "Tu as fait {} erreur(s) durant cette parti.".format(nb_erreurs))
     messagebox.showinfo("Bien joué", "La grille de Sudoku est correcte !")
 
 # Création du bouton de vérification
