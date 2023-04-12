@@ -1,25 +1,34 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
+from tkinter import *
 
 # Création de la fenêtre principale
 fenetre = tk.Tk()
 fenetre.title("Sudoku1Shot")
 
+Canvas_Width = 700
+Canvas_Height = 400
+
+fenetre.geometry("700x400")  #permet de s'assurer que la fenêtre a la bonne taille pour le canevas.
+
+Sudoku_Canvas = Canvas(fenetre,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height) #paramètre bg fixé à "#CCCCCC" pour un fond gris clair
+Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20) #Le widget canvas est placé dans la fenêtre tkinter à l'aide de la méthode grid()
+
 # Ajout d'un label pour afficher le temps
 temps_label = tk.Label(fenetre, text="Temps: 00:00")
-temps_label.grid(row=3, column=10)
+temps_label.grid(row=0, column=12)
 
 # Ajout d'un label pour afficher le nombre d'erreurs
 nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
-nb_erreurs_label.grid(row=9, column=8)
+nb_erreurs_label.grid(row=13, column=5)
 
 # Ajout d'un label pour afficher le nombre de contraintes
 nb_contraintes_label = tk.Label(fenetre, text="Contraintes: 0")
-nb_contraintes_label.grid(row=7, column=10)
+nb_contraintes_label.grid(row=9, column=12)
 
 essais_restants_label = tk.Label(fenetre, text="Essais restants: 5")
-essais_restants_label.grid(row=6, column=10)
+essais_restants_label.grid(row=6, column=12)
 
 
 grille_principale = []
@@ -35,7 +44,6 @@ def recommencer_parti():
     essais_user=0
     temps = 0
     nb_erreurs=0
-    nb_contraintes = 0
     nb_cliques=0
     temps_label.config(text="Temps: 00:00")     # mettre à jour le label pour afficher le temps à 0
     nb_erreurs_label.config(text="Erreurs: 0")  # mettre à jour le label pour afficher le nombre d'erreurs à 0
@@ -47,13 +55,15 @@ def recommencer_parti():
         for cellule in ligne:          #itère sur chaque cellule de la ligne courante.
             #efface le contenu de la cellule courante.         
             cellule.delete(0, tk.END)
+            #définit la police de caractères de la cellule à "Arial" et la taille de police à 10 points. 
+            cellule.config(font=("Arial", 10))
             #définit l'état de la cellule courante à "normal", ce qui signifie que le joueur peut y entrer une valeur
             cellule.config(state="normal") 
     grille_principale = cree_grille()  #génère une nouvelle grille de puzzle et l'assigne à "grille_principale".
 
 # Ajout d'un bouton pour redémarrer le jeu
 restart_bouton = tk.Button(fenetre, text="Redémarrer", command=recommencer_parti)
-restart_bouton.grid(row=2, column=10)
+restart_bouton.grid(row=3, column=12)
 
 
 nb_cliques = 0
@@ -83,7 +93,7 @@ def afficher_contraintes():
                 grille_principale[l][c].config(bg="white") #la couleur de fond de la cellule est fixée au blanc pour indiquer qu'elle respecte les contraintes.
 
             if valeur != "":
-                # La valeur existe déjà dans cette colonne
+                # La valeur existe déjà dans cette ligne
                 if valeur in ligne:
 
                     for i in range(9):
@@ -118,8 +128,8 @@ def afficher_contraintes():
         for r in range(ligne, ligne + 3):
             for c in range(colonne, colonne + 3):
                 valeur = grille_principale[r][c].get()
-                if valeur != "":
-                    # La valeur existe déjà dans cette colonne
+                if valeur != "":   #la cellule n'est pas vide
+                    # La valeur existe déjà dans ce carre
                     if valeur in carre:
                         
                         for i in range(ligne, ligne + 3):
@@ -136,8 +146,8 @@ def afficher_contraintes():
 
 
 # Création d'un bouton pour afficher les contraintes
-afficher_erreurs_bouton = tk.Button(fenetre, text="Afficher les erreurs", command=afficher_contraintes)
-afficher_erreurs_bouton.grid(row=5, column=10)
+afficher_erreurs_bouton = tk.Button(fenetre, text="Afficher les contraintes", command=afficher_contraintes)
+afficher_erreurs_bouton.grid(row=8, column=12)
 
 # Fonction pour mettre à jour le temps toutes les secondes
 temps=0 # Ajout de la variable temps à zéro
@@ -173,6 +183,7 @@ def creation_grille_aleatoire():
     grille = [ [valeurs[grille_predefini(r,c)] for c in colonnes] for r in lignes ]
     return grille
 
+
 # Fonction pour créer la grille de sudoku
 def cree_grille():
     # Création d'une grille de 9x9 cases (celle de base dans le jeu sudoku)
@@ -184,10 +195,18 @@ def cree_grille():
 
         for colonne in range(9):
             # Créer un nouveau compartiment pour la grille
-            compartiment = tk.Entry(fenetre, width=6)
+            compartiment = tk.Entry(fenetre, justify="center", width=6, font=("Arial", 10))
 
-            # le positioner dans la grille
-            compartiment.grid(row=ligne, column=colonne)
+            # Calculer l'indice de la région  correspondant à la case
+            region_ligne = ligne // 3
+            region_colonne = colonne // 3
+            region_ligne2 = ligne // 6
+            region_colonne2 = colonne // 6
+            region_ligne3 = ligne // 9
+            region_colonne3 = colonne // 9
+
+            # Le positionner dans la grille en fonction de son indice de région
+            compartiment.grid(row=ligne + region_ligne + region_ligne2 + region_ligne3, column=colonne+region_colonne + region_colonne2 + region_colonne3, padx=4, pady=4)
 
             # Ajouter la case à la ligne
             ligne_cree.append(compartiment)
@@ -197,6 +216,7 @@ def cree_grille():
 
     # Création de la grille de sudoku en ajoutant grille_principale a la fonction 
     grille_defini = creation_grille_aleatoire()
+
 
     # retirer aléatoirement des chiffres de la grille complétée pour créer une grille de Sudoku résoluble
     for i in range(81):
@@ -279,18 +299,18 @@ def verifie_grille():
             nombre_carre.add(grille_principale[carre_ligne][carre_colone].get())
             
  
-    messagebox.showinfo("Tu as terminé en seulement", "Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
+    messagebox.showinfo("Tu as terminé en", "Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
     messagebox.showinfo("Erreurs", "Tu as fait {} erreur(s) durant cette parti.".format(nb_erreurs))
     messagebox.showinfo("Bien joué", "La grille de Sudoku est correcte !")
 
 # Création du bouton de vérification
-bouton_verif = tk.Button(fenetre, text="Vérification", command=verifie_grille)
-bouton_verif.grid(row=9, column=3)
+bouton_verif = tk.Button(fenetre, text="Vérifier", command=verifie_grille)
+bouton_verif.grid(row=12, column=5)
 
 
 # Création de la zone de texte pour entrer le chiffre
 bouton_aide = tk.Entry(fenetre, width=4)
-bouton_aide.grid(row=9, column=0)
+bouton_aide.grid(row=12, column=2)
 
 # Fonction pour afficher les cases contenant un chiffre donné
 def aide_chiffre(chiffre):
@@ -319,7 +339,7 @@ def aide_chiffre(chiffre):
  
 # Création du bouton d'aide
 aide_bouton = tk.Button(fenetre, text="Aide", command=lambda: aide_chiffre(bouton_aide.get()))
-aide_bouton.grid(row=9, column=1)
+aide_bouton.grid(row=12, column=3)
 #Le lambda est utilisé pour créer une fonction anonyme 
 #qui prendra en paramètre la valeur entrée dans aide_entry.get et la passera à la fonction aide_chiffre lorsque le bouton est cliqué.
 
@@ -328,8 +348,8 @@ def quitter_partie():
     if messagebox.askyesno("J'en ai marre", "Tu es un looser ouuuuu ?"):      #Demander une question
         fenetre.destroy() # détruit la fenêtre principale de l'application et quitte le programme.
 
-quitter_bouton = tk.Button(fenetre, text="J'en ai marre", command=quitter_partie)
-quitter_bouton.grid(row=9, column=5)
+quitter_bouton = tk.Button(fenetre, text="Stop", command=quitter_partie)
+quitter_bouton.grid(row=12, column=7)
 
 
 # Affichage de la fenêtre
