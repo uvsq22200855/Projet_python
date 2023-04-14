@@ -344,6 +344,16 @@ aide_bouton.grid(row=12, column=3)
 #qui prendra en paramètre la valeur entrée dans aide_entry.get et la passera à la fonction aide_chiffre lorsque le bouton est cliqué.
 
 
+def couleur_de_base():
+    global grille_principale
+    for l in range(9):
+        for c in range(9):
+            grille_principale[l][c].config(bg="white")
+
+base_couleur_bouton = tk.Button(fenetre, text="Rénitialiser les couleurs", command=couleur_de_base)
+base_couleur_bouton.grid(row=11, column=12)
+
+
 def quitter_partie():
     if messagebox.askyesno("J'en ai marre", "Tu es un looser ouuuuu ?"):      #Demander une question
         fenetre.destroy() # détruit la fenêtre principale de l'application et quitte le programme.
