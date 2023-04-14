@@ -7,10 +7,10 @@ from tkinter import *
 fenetre = tk.Tk()
 fenetre.title("Sudoku1Shot")
 
-Canvas_Width = 700
+Canvas_Width = 715
 Canvas_Height = 400
 
-fenetre.geometry("700x400")  #permet de s'assurer que la fenêtre a la bonne taille pour le canevas.
+fenetre.geometry("715x400")  #permet de s'assurer que la fenêtre a la bonne taille pour le canevas.
 
 Sudoku_Canvas = Canvas(fenetre,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height) #paramètre bg fixé à "#CCCCCC" pour un fond gris clair
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20) #Le widget canvas est placé dans la fenêtre tkinter à l'aide de la méthode grid()
@@ -194,7 +194,7 @@ def cree_grille():
         ligne_cree = []
 
         for colonne in range(9):
-            # Créer un nouveau compartiment pour la grille
+            # Créer un nouveau compartiment pour la grille, pour chaque case de la grille, une entrée est créée
             compartiment = tk.Entry(fenetre, justify="center", width=6, font=("Arial", 10))
 
             # Calculer l'indice de la région  correspondant à la case
@@ -207,7 +207,8 @@ def cree_grille():
 
             # Le positionner dans la grille en fonction de son indice de région
             compartiment.grid(row=ligne + region_ligne + region_ligne2 + region_ligne3, column=colonne+region_colonne + region_colonne2 + region_colonne3, padx=4, pady=4)
-
+            #Les entrées sont stockées dans une liste row pour chaque ligne, qui est ensuite ajoutée à la liste grid pour former la grille complète.
+            
             # Ajouter la case à la ligne
             ligne_cree.append(compartiment)
 
@@ -308,42 +309,6 @@ bouton_verif = tk.Button(fenetre, text="Vérifier", command=verifie_grille)
 bouton_verif.grid(row=12, column=5)
 
 
-# Création de la zone de texte pour entrer le chiffre
-bouton_aide = tk.Entry(fenetre, width=4)
-bouton_aide.grid(row=12, column=2)
-
-# Fonction pour afficher les cases contenant un chiffre donné
-def aide_chiffre(chiffre):
-
-    # Réinitialiser la couleur d'arrière-plan de toutes les cellules en blanc pour chaque chiffre saisi (peut être supprimée si nécessaire)
-    for ligne in range(9):
-        for colonne in range(9):
-            grille_principale[ligne][colonne].configure(bg="white")
-
-    # Parcourir chaque case de la grille
-    for ligne in range(9):
-        for colonne in range(9):
-
-            cell = grille_principale[ligne][colonne]
-            valeur = cell.get()
-
-            # Si la valeur de la case est égale au chiffre entré
-            if valeur == chiffre:
-
-                # Changer la couleur de fond de la case
-                cell.configure(bg="turquoise")
-
-    # Si aucune case ne contient le chiffre entré mettre un message d'erreur
-    if all(cell["bg"] != "turquoise" for row in grille_principale for cell in row):
-        messagebox.showerror("Erreur", "Aucune case ne contient ce chiffre.")
- 
-# Création du bouton d'aide
-aide_bouton = tk.Button(fenetre, text="Aide", command=lambda: aide_chiffre(bouton_aide.get()))
-aide_bouton.grid(row=12, column=3)
-#Le lambda est utilisé pour créer une fonction anonyme 
-#qui prendra en paramètre la valeur entrée dans aide_entry.get et la passera à la fonction aide_chiffre lorsque le bouton est cliqué.
-
-
 def couleur_de_base():
     global grille_principale
     for l in range(9):
@@ -358,8 +323,27 @@ def quitter_partie():
     if messagebox.askyesno("J'en ai marre", "Tu es un looser ouuuuu ?"):      #Demander une question
         fenetre.destroy() # détruit la fenêtre principale de l'application et quitte le programme.
 
-quitter_bouton = tk.Button(fenetre, text="Stop", command=quitter_partie)
+quitter_bouton = tk.Button(fenetre, text="Quitté", command=quitter_partie)
 quitter_bouton.grid(row=12, column=7)
+
+
+def indice_aleatoire():
+    global grille_principale
+
+    # Choisir une cellule vide aléatoirement
+    cellules_vides = [(l, c) for l in range(9) for c in range(9) if grille_principale[l][c].get() == ""]
+
+    if cellules_vides:
+        ligne, colonne = random.choice(cellules_vides)
+        # Insérer une valeur aléatoire entre 1 et 9
+        valeur = random.randint(1, 9)
+        grille_principale[ligne][colonne].insert(0, valeur)
+        
+    else:
+        messagebox.showerror("Erreur", "Il n'y a plus de cellules vides!")
+
+indice_bouton = tk.Button(fenetre, text="Indice\npiéger", command=indice_aleatoire)
+indice_bouton.grid(row=12, column=3)
 
 
 # Affichage de la fenêtre
