@@ -31,12 +31,14 @@ Pour grid() #https://waytolearnx.com/2020/07/la-methode-grid-tkinter-python-3.ht
 
 Youtube, le web, chatgpt et autre...
 
+lien avec beaucoup d'informartion (notamment bouton): http://www.xavierdupre.fr/app/teachpyx/helpsphinx/c_gui/tkinter.html 
+
 Pour le .format: le temps écoulé en minutes et en secondes à l'aide de la méthode format(). Le {:02d} est un spécificateur de format qui garantit que le nombre affiché comporte au moins deux chiffres et que des zéros sont ajoutés si nécessaire.
+## Information utile
 
-Cell est  le nom choisi pour référencer le widget
-
+Cell est  le nom choisi pour référencer le widget.
 Widget : c'est tout éléments qu'on rajoute dans la fenêtre
 
-Entry est utilisé pour saisir un texte. Ce widget permet à l’utilisateur de saisir une ligne de texte.
+Entry est utilisé pour saisir un texte. Ce widget permet à l’utilisateur de saisir une ligne de texte. 
 
-tk.entry une méthode qui permet la saisie dans la fenêtre principale
+
