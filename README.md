@@ -41,7 +41,9 @@ Widget : c'est tout éléments qu'on rajoute dans la fenêtre
 
 Entry est utilisé pour saisir un texte. Ce widget permet à l’utilisateur de saisir une ligne de texte. 
 
-fonction aléatoire: La variable lignes est définie comme une liste de compréhension qui génère tous les indices de ligne possibles pour les cellules de la grille. Pour ce faire, elle itère sur chaque indice de sous-grille (j), mélange les indices de ligne au sein de cette sous-grille, puis concatène les indices mélangés pour toutes les sous-grilles. Cela garantit que chaque ligne contient exactement une cellule de chaque sous-grille et que les cellules de chaque sous-grille sont ordonnées de manière aléatoire.
+#### Fonction aléatoire: 
+
+La variable lignes est définie comme une liste de compréhension qui génère tous les indices de ligne possibles pour les cellules de la grille. Pour ce faire, elle itère sur chaque indice de sous-grille (j), mélange les indices de ligne au sein de cette sous-grille, puis concatène les indices mélangés pour toutes les sous-grilles. Cela garantit que chaque ligne contient exactement une cellule de chaque sous-grille et que les cellules de chaque sous-grille sont ordonnées de manière aléatoire.
 
 0,5 est le seuil de probabilité utilisé pour déterminer si une cellule de la grille de Sudoku doit être supprimée ou non, sur la base d'une valeur aléatoire générée par random.random().
 
@@ -49,43 +51,43 @@ fonction aléatoire: La variable lignes est définie comme une liste de compréh
 
 ## Utilité général de chaque fonction
 
-#### def recommencer_parti
+### def recommencer_parti
 
-0,5 est le seuil de probabilité utilisé pour déterminer si une cellule de la grille de Sudoku doit être supprimée ou non, sur la base d'une valeur aléatoire générée par random.random().
+- 0,5 est le seuil de probabilité utilisé pour déterminer si une cellule de la grille de Sudoku doit être supprimée ou non, sur la base d'une valeur aléatoire générée par random.random().
 
-#### def afficher_contrainte
+### def afficher_contrainte
 
-Cette fonction verifie dans chaque carré,colonne et ligne si une valeur ne respecte pas les contraintes du Sudoku, si ce n'est pas le cas elle l'affiche en rouge avec un sytème de conteur pour plusieur utilié différentes.
+- Cette fonction verifie dans chaque carré,colonne et ligne si une valeur ne respecte pas les contraintes du Sudoku, si ce n'est pas le cas elle l'affiche en rouge avec un sytème de conteur pour plusieur utilié différentes.
 
-#### def timer_maj 
+### def timer_maj 
 
-Fonction pour afficher un timeur donnée après l'écoulement d'un laps de temps spécifié (en millisecondes).
+- Fonction pour afficher un timeur donnée après l'écoulement d'un laps de temps spécifié (en millisecondes).
 
-#### def creation_grille_aleatoire 
+### def creation_grille_aleatoire 
 
-Cette fonction est utilisé pour générer une grille aléatoire en définissant une taille de base de 3 et en créant une solution modèle pour la ligne de base à l'aide d'une formule spécifique. Il choisit ensuite au hasard des valeurs pour les lignes, les colonnes et les nombres.
+- Cette fonction est utilisé pour générer une grille aléatoire en définissant une taille de base de 3 et en créant une solution modèle pour la ligne de base à l'aide d'une formule spécifique. Il choisit ensuite au hasard des valeurs pour les lignes, les colonnes et les nombres.
 
-#### def cree_grille 
+### def cree_grille 
 
-Cette fonction cree la grille de Sudoku séparer 3x3 et en y ajoutant des valeurs aléatoire.
+- Cette fonction cree la grille de Sudoku séparer 3x3 et en y ajoutant des valeurs aléatoire.
 
-#### def verifie_grille 
+### def verifie_grille 
 
-Cette fonction vérifié si la grille respecte les contraintes du Sudoku en passant par les carre,colonne et ligne en les triants. Elle compte le nombre d'erreur également.
+- Cette fonction vérifié si la grille respecte les contraintes du Sudoku en passant par les carre,colonne et ligne en les triants. Elle compte le nombre d'erreur également.
 
-#### def couleur_de_base
+### def couleur_de_base
 
-Cette fonction met toute les case en blanc pour avoir une meilleur visibilité de jeu.
+- Cette fonction met toute les case en blanc pour avoir une meilleur visibilité de jeu.
 
-#### def quitter_partie 
+### def quitter_partie :
 
-Cette fonction permet de fermer la fenetre de jeu a l'aide d'une question poser a l'utilisateur 
+- Cette fonction permet de fermer la fenetre de jeu a l'aide d'une question poser a l'utilisateur.
 
-#### def indice_aleatoire 
+### def indice_aleatoire 
 
-Cette fonction verifie sur une case est vide et sélectionne aléatoirement une cellule vide et insère une valeur aléatoire entre 1 et 9.
+- Cette fonction verifie sur une case est vide et sélectionne aléatoirement une cellule vide et insère une valeur aléatoire entre 1 et 9.
 
-#### def indice_juste 
+### def indice_juste 
 
-Globalement, cette fonction remplit les cellules vides d'une grille de Sudoku de manière aléatoire tout en s'assurant que les valeurs sont correctes et n'enfreignent aucune règle de Sudoku.
+- Globalement, cette fonction remplit les cellules vides d'une grille de Sudoku de manière aléatoire tout en s'assurant que les valeurs sont correctes et n'enfreignent aucune règle de Sudoku.
 
