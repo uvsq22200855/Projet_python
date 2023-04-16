@@ -103,7 +103,7 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 | `cree_grille` | `228` | random.random <**valeur**. | 
 
 ```http
-  if random.random() < 0.5:   #(modifer cette valeur)
+  random.random() < 0.5   #(modifer cette valeur)
   #Plus la valeur est élévé plus la grille est compliqué à résoudre.
 ```
 
