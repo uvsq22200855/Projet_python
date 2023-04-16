@@ -34,6 +34,8 @@ L1 MIASHS TD01 de Lichah,Lawson,Hnaoui et Saravanan
 
 Youtube, le web, chatgpt et autre...
 
+A noter que la fonction creation_grille_aleatoire a été prise sur internet du a la complicité de sa tache.
+
 Pour le .format: le temps écoulé en minutes et en secondes à l'aide de la méthode format(). Le {:02d} est un spécificateur de format qui garantit que le nombre affiché comporte au moins deux chiffres et que des zéros sont ajoutés si nécessaire.
 ## Information utile
 
@@ -102,3 +104,9 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 | :-------- | :------- | :------------------------- | 
 | `cree_grille` | `228` | random.random <**valeur** | 
 
+
+## Jouer au Sudoku
+
+Vous pouver maintenant jouer a notre Sudoku comme vous le souhaiter. Amuser vous bien. 
+
+- [Si vous etes bloquer vous avez qu'a a aller sur ce cite :)](https://www.top-sudoku.com/sudoku/fr/rentrer-un-enonce-sudoku.php)
