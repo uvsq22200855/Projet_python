@@ -13,25 +13,26 @@ L1 MIASHS TD01 de Lichah,Lawson,Hnaoui et Saravanan
 
 ## Lien et aide
 
-https://docs.python.org/fr/3/library/functions.html
+- [Site de documentation général](https://docs.python.org/fr/3/library/functions.html)
 
-Pour le messagebox.showerror: https://docs.python.org/3/library/tkinter.messagebox.html
+- [Messagebox.showerror](https://docs.python.org/3/library/tkinter.messagebox.html)
 
-Pour le  set(): https://www.geeksforgeeks.org/python-set-method/
+- [Pour le set()](https://www.geeksforgeeks.org/python-set-method/)
 
-Pour le .after: https://www.geeksforgeeks.org/python-after-method-in-tkinter/
+- [Pour le .after()](https://www.geeksforgeeks.org/python-after-method-in-tkinter/)
 
-Pour le .config: https://coderslegacy.com/python/tkinter-config/
+- [Pour le .config()](https://coderslegacy.com/python/tkinter-config/)
 
-Pour le .label: https://www.tresfacile.net/le-widget-label-tkinter/
+- [Pour le .label()](https://www.tresfacile.net/le-widget-label-tkinter/)
 
-Pour tk.Entry: #https://www.tutorialspoint.com/python/tk_entry.htm
+- [Pour tk.Entry()](https://www.tutorialspoint.com/python/tk_entry.htm)
 
-Pour grid() #https://waytolearnx.com/2020/07/la-methode-grid-tkinter-python-3.html et plein d'autre information
+- [Pour grid()](https://waytolearnx.com/2020/07/la-methode-grid-tkinter-python-3.html) et plein d'autre information
+
+- [lien avec beaucoup d'informartion (notamment bouton)](http://www.xavierdupre.fr/app/teachpyx/helpsphinx/c_gui/tkinter.html) 
+
 
 Youtube, le web, chatgpt et autre...
-
-lien avec beaucoup d'informartion (notamment bouton): http://www.xavierdupre.fr/app/teachpyx/helpsphinx/c_gui/tkinter.html 
 
 Pour le .format: le temps écoulé en minutes et en secondes à l'aide de la méthode format(). Le {:02d} est un spécificateur de format qui garantit que le nombre affiché comporte au moins deux chiffres et que des zéros sont ajoutés si nécessaire.
 ## Information utile
@@ -53,7 +54,7 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 
 ### def recommencer_parti
 
-- 0,5 est le seuil de probabilité utilisé pour déterminer si une cellule de la grille de Sudoku doit être supprimée ou non, sur la base d'une valeur aléatoire générée par random.random().
+- Cette fonction réinitialise un certain nombre de variables globales à leurs valeurs initiales, et met à jour certaines étiquettes dans l'interface et recrée une grille aléatoire.
 
 ### def afficher_contrainte
 
