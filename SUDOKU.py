@@ -7,10 +7,10 @@ from tkinter import *
 fenetre = tk.Tk()
 fenetre.title("Sudoku1Shot")
 
-Canvas_Width = 715
+Canvas_Width = 740                 # Cela permet de bien rendre la fenetre avec de bonne couleur et les boutons et fond bien visible 
 Canvas_Height = 400
 
-fenetre.geometry("715x400")  #permet de s'assurer que la fenêtre a la bonne taille pour le canevas.
+fenetre.geometry("740x400")  #permet de s'assurer que la fenêtre a la bonne taille pour le canevas.
 
 Sudoku_Canvas = Canvas(fenetre,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height) #paramètre bg fixé à "#CCCCCC" pour un fond gris clair
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20) #Le widget canvas est placé dans la fenêtre tkinter à l'aide de la méthode grid()
@@ -19,37 +19,39 @@ Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20) #Le widget canvas es
 temps_label = tk.Label(fenetre, text="Temps: 00:00")
 temps_label.grid(row=0, column=12)
 
-# Ajout d'un label pour afficher le nombre d'erreurs
 nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
 nb_erreurs_label.grid(row=13, column=5)
 
-# Ajout d'un label pour afficher le nombre de contraintes
 nb_contraintes_label = tk.Label(fenetre, text="Contraintes: 0")
 nb_contraintes_label.grid(row=9, column=12)
 
 essais_restants_label = tk.Label(fenetre, text="Essais restants: 5")
 essais_restants_label.grid(row=6, column=12)
 
+nb_aleatoire_label = tk.Label(fenetre, text="Essais: 5") 
+nb_aleatoire_label.grid(row=12, column=1)
+
 
 grille_principale = []
 nb_erreurs=0
 def recommencer_parti():
-    global grille_principale #signifie que toute modification apportée à cette variable à l'intérieur de la fonction
-    global nb_erreurs           #affectera la variable globale du même nom à l'extérieur de la fonction.
-    global temps
-    global nb_contraintes
-    global essais_user
-    global nb_cliques
+    global grille_principale, nb_erreurs, temps #signifie que toute modification apportée à cette variable à l'intérieur de la fonction est sauvegarder
+    global nb_contraintes, essais_user, nb_cliques, essaie_possible, essaie_utilise #affectera la variable globale du même nom à l'extérieur de la fonction.
 
     essais_user=0
+    essaie_utilise=0
     temps = 0
     nb_erreurs=0
     nb_cliques=0
+    essaie_possible=0
+    nb_contraintes=0
     temps_label.config(text="Temps: 00:00")     # mettre à jour le label pour afficher le temps à 0
-    nb_erreurs_label.config(text="Erreurs: 0")  # mettre à jour le label pour afficher le nombre d'erreurs à 0
+    nb_erreurs_label.config(text="Erreurs: 0")
     nb_contraintes_label.config(text="Contraintes: 0")
     essais_restants_label.config(text="Essais restants: 5")
+    nb_aleatoire_label.config(text="Essais: 5")
     afficher_erreurs_bouton.config(state='normal')
+    aide_bouton.config(state='normal')
 
     for ligne in grille_principale:    #itère sur chaque ligne de la grille du puzzle.
         for cellule in ligne:          #itère sur chaque cellule de la ligne courante.
@@ -69,10 +71,7 @@ restart_bouton.grid(row=3, column=12)
 nb_cliques = 0
 essais_user=0
 def afficher_contraintes():
-    global grille_principale
-    global nb_contraintes
-    global nb_cliques
-    global essais_user
+    global grille_principale, nb_contraintes, nb_cliques, essais_user
     nb_contraintes = 0
     nb_cliques += 1
     essais_user += 1
@@ -82,11 +81,26 @@ def afficher_contraintes():
     
     # Vérification des contraintes dans chaque ligne
     for l in range(9):
+        colonne = []
+        # Vérification des contraintes dans chaque colonne
+        for c in range(9):
+            valeur = grille_principale[c][l].get()
+            if valeur != "":
+                # La valeur existe déjà dans cette colonne
+                if valeur in colonne:
+
+                    for i in range(9):
+                        if grille_principale[i][l].get() == valeur:
+                            grille_principale[i][l].config(bg="red")
+                            nb_contraintes+=1
+                else:
+                    colonne.append(valeur)
+        
         ligne = []
 
         for c in range(9):
             valeur = grille_principale[l][c].get()
-            if valeur == "" or not valeur.isdigit() or int(valeur) < 1 or int(valeur) > 9:  # vérifie si l'utilisateur a saisie une valeur
+            if valeur == "" or not valeur.isdigit() or int(valeur) < 1 or int(valeur) > 9:  # vérifie si l'utilisateur a saisie une valeur correct 
                 grille_principale[l][c].config(bg="red")
                 nb_contraintes+=1
             else:
@@ -104,22 +118,6 @@ def afficher_contraintes():
                     # Si la valeur ne figure pas dans la liste de lignes, elle l'ajoute à la liste pour vérification ultérieure.
                     ligne.append(valeur) # permet de vérifier si une valeur apparaît déjà dans la ligne et dc pas de doublons.
                                          
-        # Vérification des contraintes dans chaque colonne
-        colonne = []
-
-        for c in range(9):
-            valeur = grille_principale[c][l].get()
-            if valeur != "":
-                # La valeur existe déjà dans cette colonne
-                if valeur in colonne:
-
-                    for i in range(9):
-                        if grille_principale[i][l].get() == valeur:
-                            grille_principale[i][l].config(bg="red")
-                            nb_contraintes+=1
-                else:
-                    colonne.append(valeur)
-                    
         # Vérification des contraintes dans chaque carré
         carre = []
         ligne = (l // 3) * 3
@@ -154,10 +152,12 @@ temps=0 # Ajout de la variable temps à zéro
 def timer_maj():
     global temps
     temps += 1
+    # les minutes obtenues par la division entière par 60 et les secondes étant le reste divisée par 60.
     temps_label.config(text="Temps: {:02d}:{:02d}".format(temps // 60, temps % 60))
+    # planifie l'appel de la fonction timer_maj() toutes les secondes
     fenetre.after(1000, timer_maj)
 
-# Lancer la fonction pour mettre à jour le temps toutes les secondes
+# Lancer la fonction pour mettre à jour le temps toutes les secondes, garantit que c'est mise à jour toutes les secondes pour afficher le temps écoulé.
 fenetre.after(1000, timer_maj)
 
 
@@ -167,17 +167,17 @@ def creation_grille_aleatoire():
 
     # modèle de solution valable pour la ligne de base
     def grille_predefini(l,c): 
-        return (base*(l%base)+l//base+c)%cote
+        return (base*(l%base)+l//base+c)%cote   # calcule l'indice d'une cellule en fonction de ses indices de ligne et de colonne.
 
     # choisir des valeurs aléatoire pour les lignes, les colonnes et les nombres
     def randint(s): 
-        return random.sample(s,len(s))
+        return random.sample(s,len(s)) # utilisée pour mélanger les indices de ligne et de colonne et les valeurs possibles des cellules par la suite.
     
     # Elle est utilisée pour générer les valeurs de ligne et de colonne pour chaque case de la grille.
     base_unique = range(base) 
     lignes  = [ j*base + l for j in randint(base_unique) for l in randint(base_unique) ] 
     colonnes  = [ j*base + c for j in randint(base_unique) for c in randint(base_unique) ]
-    valeurs  = randint(range(1,base*base+1))
+    valeurs  = randint(range(1,base*base+1)) #  représente les valeurs possibles qui peuvent être remplies dans chaque cellule de la grille.
 
     # créer une grille de sudoku en utilisant un modèle de base aléatoire
     grille = [ [valeurs[grille_predefini(r,c)] for c in colonnes] for r in lignes ]
@@ -221,11 +221,11 @@ def cree_grille():
 
     # retirer aléatoirement des chiffres de la grille complétée pour créer une grille de Sudoku résoluble
     for i in range(81):
-        ligne = i // 9
         colonne = i % 9
-        cellule = grille_cree[ligne][colonne]
+        ligne = i // 9
+        cellule = grille_cree[colonne][ligne]
         
-        if random.random() < 0.5:
+        if random.random() < 0.4: 
             # supprimer des nombres sélectionnés au hasard dans une grille de Sudoku complétée afin de créer une grille résoluble.
             cellule.delete(0, tk.END) # supprimer le contenu de la cellule, en commençant par l'index 0 jusqu'à tk.END
         else:  
@@ -264,17 +264,6 @@ def verifie_grille():
         nombre_carre = set()
 
         for c in range(9):
-            # Vérifier la ligne l
-
-            if grille_principale[l][c].get() in nombre_ligne:
-                messagebox.showerror("Erreur", "Il y a une erreur dans la ligne {}.".format(l+1))
-                nb_erreurs += 1
-                
-                # Mise à jour du nombre d'erreurs
-                nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
-                return
-            nombre_ligne.add(grille_principale[l][c].get())
-
             # Vérifier la colonne c
 
             if grille_principale[c][l].get() in nombre_colone:
@@ -285,6 +274,17 @@ def verifie_grille():
                 nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
                 return
             nombre_colone.add(grille_principale[c][l].get())
+
+             # Vérifier la ligne l
+
+            if grille_principale[l][c].get() in nombre_ligne:
+                messagebox.showerror("Erreur", "Il y a une erreur dans la ligne {}.".format(l+1))
+                nb_erreurs += 1
+                
+                # Mise à jour du nombre d'erreurs
+                nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
+                return
+            nombre_ligne.add(grille_principale[l][c].get())
 
             # Vérifier le carre 3x3 (l // 3, l % 3)
             carre_ligne = (l // 3) * 3 + c // 3
@@ -320,10 +320,10 @@ base_couleur_bouton.grid(row=11, column=12)
 
 
 def quitter_partie():
-    if messagebox.askyesno("J'en ai marre", "Tu es un looser ouuuuu ?"):      #Demander une question
+    if messagebox.askyesno("J'arrete", "Veux-tu réelement quitter la parti ?"):      #Demander une question
         fenetre.destroy() # détruit la fenêtre principale de l'application et quitte le programme.
 
-quitter_bouton = tk.Button(fenetre, text="Quitté", command=quitter_partie)
+quitter_bouton = tk.Button(fenetre, text="Quitter", command=quitter_partie)
 quitter_bouton.grid(row=12, column=7)
 
 
@@ -331,6 +331,7 @@ def indice_aleatoire():
     global grille_principale
 
     # Choisir une cellule vide aléatoirement
+    #crée une compréhension de liste qui parcourt toutes les cellules de la grille et ajoute les valeurs de toutes les cellules vides à la liste cellules_vides.
     cellules_vides = [(l, c) for l in range(9) for c in range(9) if grille_principale[l][c].get() == ""]
 
     if cellules_vides:
@@ -340,10 +341,47 @@ def indice_aleatoire():
         grille_principale[ligne][colonne].insert(0, valeur)
         
     else:
-        messagebox.showerror("Erreur", "Il n'y a plus de cellules vides!")
+        messagebox.showerror("Erreur", "Il n'y a plus de cases vides!")
 
-indice_bouton = tk.Button(fenetre, text="Indice\npiéger", command=indice_aleatoire)
+indice_bouton = tk.Button(fenetre, text="Indices\npiégers", command=indice_aleatoire)
 indice_bouton.grid(row=12, column=3)
+
+
+essaie_possible=0
+essaie_utilise=0
+def indice_juste():
+    global grille_principale, essaie_possible, essaie_utilise
+    essaie_possible+=1
+    essaie_utilise+=1
+    if essaie_possible == 5:
+        aide_bouton.config(state=tk.DISABLED)
+
+    # Trouver une cellule vide aléatoirement
+    i = random.randint(0, 8)   #génèrent des indices aléatoires (i et j) jusqu'à ce qu'une cellule vide soit trouvée dans la grille_principale.
+    j = random.randint(0, 8)
+    while grille_principale[i][j].get() != "":
+        i = random.randint(0, 8)
+
+    # Trouver une valeur valide pour la cellule
+    valeurs_correct = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    
+    for l in range(9):
+        if grille_principale[l][j].get() in valeurs_correct:
+            valeurs_correct.remove(grille_principale[l][j].get()) #indice l est utilisé pour sélectionner la ligne, et j pour la colonne.
+        if grille_principale[i][l].get() in valeurs_correct:
+            valeurs_correct.remove(grille_principale[i][l].get()) #grille_principale est une liste bidimensionnelle valide avec au moins l lignes et j colonne
+            
+    # Remplir la cellule avec la valeur choisie aléatoirement
+    if valeurs_correct:
+        valeur = random.choice(valeurs_correct)
+        grille_principale[i][j].insert(0, valeur)
+
+    nb_aleatoire = 5 - essaie_utilise
+    nb_aleatoire_label.config(text="Essais: {}".format(nb_aleatoire))
+
+# Ajout d'un bouton pour obtenir de l'aide
+aide_bouton = tk.Button(fenetre, text="Aide", command=indice_juste)
+aide_bouton.grid(row=12, column=0)
 
 
 # Affichage de la fenêtre
