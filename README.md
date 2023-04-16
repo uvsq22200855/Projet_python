@@ -95,15 +95,10 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 
 ## Modifier la difficulté de la grille 
 
-#### Modifier la valeur
+#### Modifier la valeur (ci dessous). Plus la valeur est élévé plus la grille est compliqué à résoudre.
 
 
 | Fonction| Ligne     | Description                |         
 | :-------- | :------- | :------------------------- | 
-| `cree_grille` | `228` | random.random <**valeur**. | 
-
-```http
-  random.random() < 0.5   #(modifer cette valeur)
-  #Plus la valeur est élévé plus la grille est compliqué à résoudre.
-```
+| `cree_grille` | `228` | random.random <**valeur** | 
 
