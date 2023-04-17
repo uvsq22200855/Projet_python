@@ -1,17 +1,19 @@
 
 # SUDOKU Projet_python 
 
-Le Sudoku est un jeu dans lequel le joueur joue sur une grille de 9 x 9 et chaque rangée, colonne et carré doit être rempli avec les numéros 1 a 9, sans répéter aucun nombre dans la rangée, la colonne ou le carré. Le but du jeu présenté est de le réalisé du premier coup par le joueur le plus rapidement possible et avec le moins d'aide.
+Le Sudoku est un jeu dans lequel le joueur joue sur une grille de 9 x 9 et chaque rangée, colonne et carré doit être rempli avec les numéros 1 a 9, sans répéter aucun nombre dans la rangée, la colonne ou le carré. Le but du jeu présenté est de le réalisé du premier coup par le joueur le plus rapidement possible et avec le moins d'aide. C'est une variante ou le joueur doit remplir toute les cases avant d'appuiyer sur le bouton "vérifier" sinon cela indiquera qu'une case st vide.
 
 
-## Auteur
+## 🚀 Auteur
 
 Lien github du Projet: https://github.com/uvsq22200855/Projet_python
+
+[Lien vers le code du Sudoku](https://github.com/uvsq22200855/Projet_python/blob/main/SUDOKU.py)
 
 L1 MIASHS TD01 de Lichah,Lawson,Hnaoui et Saravanan
 
 
-## Lien et aide
+## 🔗 Lien et aide
 
 - [Site de documentation général](https://docs.python.org/fr/3/library/functions.html)
 
@@ -52,7 +54,7 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 
 
 
-## Utilité général de chaque fonction
+## 🛠 Utilité général de chaque fonction
 
 ### def recommencer_parti
 
@@ -69,6 +71,7 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 ### def creation_grille_aleatoire 
 
 - Cette fonction est utilisé pour générer une grille aléatoire en définissant une taille de base de 3 et en créant une solution modèle pour la ligne de base à l'aide d'une formule spécifique. Il choisit ensuite au hasard des valeurs pour les lignes, les colonnes et les nombres.
+**Cette fonction a été prise sur internet**
 
 ### def cree_grille 
 
@@ -95,7 +98,7 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 - Globalement, cette fonction remplit les cellules vides d'une grille de Sudoku de manière aléatoire tout en s'assurant que les valeurs sont correctes et n'enfreignent aucune règle de Sudoku.
 
 
-## Modifier la difficulté de la grille 
+## 🤔 Modifier la difficulté de la grille 
 
 #### Modifier la valeur (ci dessous). Plus la valeur est élévé plus la grille est compliqué à résoudre.
 
@@ -105,8 +108,8 @@ La variable lignes est définie comme une liste de compréhension qui génère t
 | `cree_grille` | `228` | random.random <**valeur** | 
 
 
-## Jouer au Sudoku
+## 👩‍💻 Jouer au Sudoku
 
 Vous pouver maintenant jouer a notre Sudoku comme vous le souhaiter. Amuser vous bien. 
 
-- [Si vous etes bloquer vous avez qu'a a aller sur ce cite :)](https://www.top-sudoku.com/sudoku/fr/rentrer-un-enonce-sudoku.php)
+- [Si vous etes bloquer vous avez qu'a a aller sur ce cite 🧠 :)](https://www.top-sudoku.com/sudoku/fr/rentrer-un-enonce-sudoku.php)
