@@ -15,22 +15,6 @@ fenetre.geometry("740x400")  #permet de s'assurer que la fenêtre a la bonne tai
 Sudoku_Canvas = Canvas(fenetre,bg='#CCCCCC', width= Canvas_Width, height= Canvas_Height) #paramètre bg fixé à "#CCCCCC" pour un fond gris clair
 Sudoku_Canvas.grid(column=0,row=0,columnspan=20,rowspan=20) #Le widget canvas est placé dans la fenêtre tkinter à l'aide de la méthode grid()
 
-# Ajout d'un label pour afficher le temps
-temps_label = tk.Label(fenetre, text="Temps: 00:00")
-temps_label.grid(row=0, column=12)
-
-nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
-nb_erreurs_label.grid(row=13, column=5)
-
-nb_contraintes_label = tk.Label(fenetre, text="Contraintes: 0")
-nb_contraintes_label.grid(row=9, column=12)
-
-essais_restants_label = tk.Label(fenetre, text="Essais restants: 5")
-essais_restants_label.grid(row=6, column=12)
-
-nb_aleatoire_label = tk.Label(fenetre, text="Essais: 5") 
-nb_aleatoire_label.grid(row=12, column=1)
-
 
 grille_principale = []
 nb_erreurs=0
@@ -38,13 +22,6 @@ def recommencer_parti():
     global grille_principale, nb_erreurs, temps #signifie que toute modification apportée à cette variable à l'intérieur de la fonction est sauvegarder
     global nb_contraintes, essais_user, nb_cliques, essaie_possible, essaie_utilise #affectera la variable globale du même nom à l'extérieur de la fonction.
 
-    essais_user=0
-    essaie_utilise=0
-    temps = 0
-    nb_erreurs=0
-    nb_cliques=0
-    essaie_possible=0
-    nb_contraintes=0
     temps_label.config(text="Temps: 00:00")     # mettre à jour le label pour afficher le temps à 0
     nb_erreurs_label.config(text="Erreurs: 0")
     nb_contraintes_label.config(text="Contraintes: 0")
@@ -52,6 +29,13 @@ def recommencer_parti():
     nb_aleatoire_label.config(text="Essais: 5")
     afficher_erreurs_bouton.config(state='normal')
     aide_bouton.config(state='normal')
+    essais_user=0
+    essaie_utilise=0
+    temps = 0
+    nb_erreurs=0
+    nb_cliques=0
+    essaie_possible=0
+    nb_contraintes=0
 
     for ligne in grille_principale:    #itère sur chaque ligne de la grille du puzzle.
         for cellule in ligne:          #itère sur chaque cellule de la ligne courante.
@@ -94,7 +78,7 @@ def afficher_contraintes():
                             grille_principale[i][l].config(bg="red")
                             nb_contraintes+=1
                 else:
-                    colonne.append(valeur)
+                    colonne.append(valeur)  #permet de mémoriser pour plus tard ou sont placer les doublons
         
         ligne = []
 
@@ -120,12 +104,12 @@ def afficher_contraintes():
                                          
         # Vérification des contraintes dans chaque carré
         carre = []
-        ligne = (l // 3) * 3
-        colonne = (l % 3) * 3
+        ligne = (l // 3) * 3 #En divisant l par 3 à l'aide de la division entière on obtient l'indice du carré 3x3 correspondant.
+        colonne = (l % 3) * 3 # En multipliant cette valeur par 3, on obtient l'indice de la ligne de départ de ce carré.
 
-        for r in range(ligne, ligne + 3):
+        for l in range(ligne, ligne + 3):
             for c in range(colonne, colonne + 3):
-                valeur = grille_principale[r][c].get()
+                valeur = grille_principale[l][c].get()
                 if valeur != "":   #la cellule n'est pas vide
                     # La valeur existe déjà dans ce carre
                     if valeur in carre:
@@ -142,10 +126,16 @@ def afficher_contraintes():
     essais_restants = 5 - essais_user
     essais_restants_label.config(text="Essais restants: {}".format(essais_restants))
 
-
 # Création d'un bouton pour afficher les contraintes
 afficher_erreurs_bouton = tk.Button(fenetre, text="Afficher les contraintes", command=afficher_contraintes)
 afficher_erreurs_bouton.grid(row=8, column=12)
+
+nb_contraintes_label = tk.Label(fenetre, text="Contraintes: 0")
+nb_contraintes_label.grid(row=9, column=12)
+
+essais_restants_label = tk.Label(fenetre, text="Essais restants: 5")
+essais_restants_label.grid(row=6, column=12)
+
 
 # Fonction pour mettre à jour le temps toutes les secondes
 temps=0 # Ajout de la variable temps à zéro
@@ -159,6 +149,10 @@ def timer_maj():
 
 # Lancer la fonction pour mettre à jour le temps toutes les secondes, garantit que c'est mise à jour toutes les secondes pour afficher le temps écoulé.
 fenetre.after(1000, timer_maj)
+
+# Ajout d'un label pour afficher le temps
+temps_label = tk.Label(fenetre, text="Temps: 00:00")
+temps_label.grid(row=0, column=12)
 
 
 def creation_grille_aleatoire():
@@ -188,7 +182,7 @@ def creation_grille_aleatoire():
 def cree_grille():
     # Création d'une grille de 9x9 cases (celle de base dans le jeu sudoku)
     grille_cree = []
-
+    # crée une liste de listes, où chaque liste représente une ligne de la grille et contient des widgets Entry individuels pour chaque cellule de la ligne.
     for ligne in range(9):
         # Créer une nouvelle ligne pour la grille
         ligne_cree = []
@@ -212,17 +206,17 @@ def cree_grille():
             # Ajouter la case à la ligne
             ligne_cree.append(compartiment)
 
-        # Ajouter la ligne à la grille
+        # Ajouter la ligne à la grille , la grille entière est construite ligne par ligne, chaque nouvelle ligne étant ajoutée à la liste grille_cree.
         grille_cree.append(ligne_cree)
 
     # Création de la grille de sudoku en ajoutant grille_principale a la fonction 
     grille_defini = creation_grille_aleatoire()
 
-
     # retirer aléatoirement des chiffres de la grille complétée pour créer une grille de Sudoku résoluble
     for i in range(81):
-        colonne = i % 9
-        ligne = i // 9
+        # calculer les indices de colonne et de ligne pour chaque cellule de la grille en fonction de l'indice i
+        colonne = i % 9 
+        ligne = i // 9  # obtient la cellule correspondante dans la liste grille_cree à l'aide de ces indices.
         cellule = grille_cree[colonne][ligne]
         
         if random.random() < 0.4: 
@@ -259,9 +253,9 @@ def verifie_grille():
 
     for l in range(9):
 
-        nombre_ligne = set()    #trie dans l'ordre croissant une liste de chiffre et supprime les doublons
-        nombre_colone = set()
-        nombre_carre = set()
+        nombre_ligne = set()    #utilisé pour stocker les chiffres uniques trouvés dans une ligne particulière de la grille de Sudoku.
+        nombre_colone = set()   #La fonction itère sur chaque cellule de la ligne et ajoute la valeur de chaque cellule à l'ensemble nombre colone...
+        nombre_carre = set()    #trie dans l'ordre croissant une liste de chiffre et supprime les doublons
 
         for c in range(9):
             # Vérifier la colonne c
@@ -273,7 +267,7 @@ def verifie_grille():
                 # Mise à jour du nombre d'erreurs
                 nb_erreurs_label.config(text="Erreurs: {}".format(nb_erreurs))
                 return
-            nombre_colone.add(grille_principale[c][l].get())
+            nombre_colone.add(grille_principale[c][l].get()) #ajoute la valeur de la cellule de la grille à "nombre_colone"
 
              # Vérifier la ligne l
 
@@ -308,6 +302,9 @@ def verifie_grille():
 bouton_verif = tk.Button(fenetre, text="Vérifier", command=verifie_grille)
 bouton_verif.grid(row=12, column=5)
 
+nb_erreurs_label = tk.Label(fenetre, text="Erreurs: 0")
+nb_erreurs_label.grid(row=13, column=5)
+
 
 def couleur_de_base():
     global grille_principale
@@ -326,7 +323,7 @@ def quitter_partie():
 quitter_bouton = tk.Button(fenetre, text="Quitter", command=quitter_partie)
 quitter_bouton.grid(row=12, column=7)
 
-
+'''
 def indice_aleatoire():
     global grille_principale
 
@@ -345,7 +342,7 @@ def indice_aleatoire():
 
 indice_bouton = tk.Button(fenetre, text="Indices\npiégers", command=indice_aleatoire)
 indice_bouton.grid(row=12, column=3)
-
+'''
 
 essaie_possible=0
 essaie_utilise=0
@@ -380,8 +377,11 @@ def indice_juste():
     nb_aleatoire_label.config(text="Essais: {}".format(nb_aleatoire))
 
 # Ajout d'un bouton pour obtenir de l'aide
-aide_bouton = tk.Button(fenetre, text="Aide", command=indice_juste)
-aide_bouton.grid(row=12, column=0)
+aide_bouton = tk.Button(fenetre, text="Valeurs", command=indice_juste)
+aide_bouton.grid(row=12, column=3)
+
+nb_aleatoire_label = tk.Label(fenetre, text="Essais: 5") 
+nb_aleatoire_label.grid(row=13, column=3)
 
 
 # Affichage de la fenêtre
